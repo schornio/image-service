@@ -1,10 +1,8 @@
-import { createServer } from 'http';
+import { server } from './server';
 
-export const server = createServer((_req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('Hello World');
+const PORT = process.env.PORT ?? '80';
+
+server.listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Server is running on port ${PORT}`);
 });
-
-// server.listen(3000, () => {
-//   console.log("Server is running on port 3000");
-// });
