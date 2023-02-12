@@ -3,6 +3,8 @@
  * https://jestjs.io/docs/configuration
  */
 
+process.env.ALLOWED_ENDPOINTS = 'http://localhost:8080';
+
 export default {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -23,7 +25,7 @@ export default {
   // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -31,7 +33,7 @@ export default {
   // ],
 
   // Indicates which provider should be used to instrument code for coverage
-  coverageProvider: "v8",
+  coverageProvider: 'v8',
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -174,7 +176,7 @@ export default {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    "^.+\\.ts$": "ts-jest",
+    '^.+\\.ts$': 'ts-jest',
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation

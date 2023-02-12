@@ -5,6 +5,8 @@ import { server } from './server';
 
 const FIXTURES_PATH = `${__dirname}/test/fixtures`;
 
+const originalEnv = process.env;
+
 const testServer = createTestServer({ root: FIXTURES_PATH });
 
 describe('server', () => {
@@ -14,6 +16,13 @@ describe('server', () => {
 
   afterAll(() => {
     testServer.close();
+    jest.resetModules();
+    process.env = originalEnv;
+  });
+
+  beforeEach(() => {
+    jest.resetModules();
+    process.env = { ...originalEnv, ALLOWED_ENDPOINTS: 'localhost:8080' };
   });
 
   it.each(['10x40', '20x', 'x30'])(
@@ -34,23 +43,34 @@ describe('server', () => {
     },
   );
 
+  it('should return 400 for invalid domain', async () => {
+    const repsonse = await request(server)
+      .get('/10x10/localhost:8081/10x10/invalid.jpg')
+      .expect(400);
+    expect(repsonse.text).toEqual('Invalid domain');
+  });
+
   it('should return 400 for invalid content-type', async () => {
-    await request(server)
+    const repsonse = await request(server)
       .get('/10x10/localhost:8080/invalid-content-type.txt')
       .expect(400);
+    expect(repsonse.text).toEqual('Unsupported content type');
   });
 
   it('should return 400 for invalid URL', async () => {
-    await request(server).get('/invalid').expect(400);
+    const repsonse = await request(server).get('/invalid').expect(400);
+    expect(repsonse.text).toEqual('Invalid URL');
   });
 
   it('should return 400 if no url is provided', async () => {
-    await request(server).get('').expect(400);
+    const repsonse = await request(server).get('').expect(400);
+    expect(repsonse.text).toEqual('Invalid URL');
   });
 
   it('should return 404 for non-existing image', async () => {
-    await request(server)
+    const repsonse = await request(server)
       .get('/10x10/localhost:8080/10x10/invalid.jpg')
       .expect(404);
+    expect(repsonse.text).toEqual('Image not found');
   });
 });
