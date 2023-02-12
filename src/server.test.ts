@@ -5,24 +5,15 @@ import { server } from './server';
 
 const FIXTURES_PATH = `${__dirname}/test/fixtures`;
 
-const originalEnv = process.env;
-
 const testServer = createTestServer({ root: FIXTURES_PATH });
 
 describe('server', () => {
-  beforeAll(() => {
-    testServer.listen(8080);
+  beforeAll((callback) => {
+    testServer.listen(8080, callback);
   });
 
   afterAll(() => {
     testServer.close();
-    jest.resetModules();
-    process.env = originalEnv;
-  });
-
-  beforeEach(() => {
-    jest.resetModules();
-    process.env = { ...originalEnv, ALLOWED_ENDPOINTS: 'localhost:8080' };
   });
 
   it.each(['10x40', '20x', 'x30'])(

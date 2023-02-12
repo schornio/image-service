@@ -36,8 +36,6 @@ async function handleRequest(
       const width = widthConfig ? parseInt(widthConfig, 10) : undefined;
       const height = heightConfig ? parseInt(heightConfig, 10) : undefined;
 
-      // ToDo: check if the domain is allowed
-
       const imageResponse = await fetch(
         `${allowedEndpoint.endpoint}${imageURL}`,
       );
