@@ -1,6 +1,6 @@
 {
   "name": "@schornio/image-service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Caching, resizing, cropping of images ",
   "main": "index.js",
   "scripts": {
