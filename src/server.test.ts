@@ -9,10 +9,12 @@ const testServer = createTestServer({ root: FIXTURES_PATH });
 
 describe('server', () => {
   beforeAll((callback) => {
+    jest.useFakeTimers();
     testServer.listen(8080, callback);
   });
 
   afterAll(() => {
+    jest.useRealTimers();
     testServer.close();
   });
 
@@ -63,5 +65,13 @@ describe('server', () => {
       .get('/10x10/localhost:8080/10x10/invalid.jpg')
       .expect(404);
     expect(repsonse.text).toEqual('Image not found');
+  });
+
+  it('should return 200 for liveness probe', async () => {
+    const mockTimeString = '2021-01-01T00:00:00.000Z';
+    jest.setSystemTime(new Date(mockTimeString));
+
+    const repsonse = await request(server).get('/health').expect(200);
+    expect(repsonse.text).toEqual(`OK - ${mockTimeString}`);
   });
 });

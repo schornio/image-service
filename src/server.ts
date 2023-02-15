@@ -2,6 +2,8 @@ import { IncomingMessage, ServerResponse, createServer } from 'http';
 import { sendBadRequestError, sendNotFoundError } from './sendError';
 import sharp from 'sharp';
 
+const HEALTH_CHECK_PATH = '/health';
+
 const REGEX = /^\/(\d*)x(\d*)\/([^/]+)(\/.*)/u;
 
 const ALLOWED_ENDPOINTS = new Map(
@@ -26,6 +28,12 @@ async function handleRequest(
   // url is always defined, but the type definition is wrong
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const url = request.url!;
+
+  if (url === HEALTH_CHECK_PATH) {
+    response.statusCode = 200;
+    response.end(`OK - ${new Date().toISOString()}`);
+    return;
+  }
 
   const [_match, widthConfig, heightConfig, imageDomain, imageURL] =
     url.match(REGEX) ?? [];
